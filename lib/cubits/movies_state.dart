@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-import 'models/genre_model.dart';
-import 'models/movie_model.dart';
+import '../models/genre_model.dart';
+import '../models/movie_model.dart';
 
 abstract class MoviesState extends Equatable {}
 
@@ -24,14 +24,7 @@ class LoadedState extends MoviesState {
   List<Object> get props => [movies];
 }
 
-class LoadedOneMovieState extends MoviesState {
-  LoadedOneMovieState(this.movie);
 
-  final MovieModel movie;
-
-  @override
-  List<Object> get props => [movie.id];
-}
 
 class ErrorState extends MoviesState {
   @override

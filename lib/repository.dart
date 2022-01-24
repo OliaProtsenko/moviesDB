@@ -1,4 +1,5 @@
 import 'package:http/http.dart' as http;
+import 'package:movies/models/actor_model.dart';
 import 'package:movies/models/movie_model.dart';
 import 'dart:convert';
 import 'models/genre_model.dart';
@@ -70,5 +71,38 @@ class MovieRepository {
         overview: data["overview"],
         rating: data["vote_average"]);
     return result;
+  }
+
+  Future<List<ActorModel>> getActorsForFilm({required movieId}) async {
+    var data = await _getData(
+        url: "$theMovieDbURL/$movieId/credits?api_key=$theMovieDbAPI");
+    List<ActorModel> temp = [];
+    for (var item in data["cast"]) {
+      if (item["known_for_department"] == "Acting") {
+        temp.add(ActorModel(
+            id: item["id"].toString(),
+            name: item["name"],
+            gender: (item["gender"] == 1) ? "woman" : "man",
+            imageUrl: (item["profile_path"]==null)?"null":"$theMovieDbImageURL${item["profile_path"]}",
+            rating: item["popularity"].toDouble()));
+      }
+    }
+    return Future.value(temp);
+  }
+
+  Future<ActorModel> getActorById({required actorId}) async {
+    var data =
+        await _getData(url: "$getActorByIdURL/$actorId?api_key=$theMovieDbAPI");
+    ActorModel actor = ActorModel(
+        id: data["id"].toString(),
+        name: data["name"],
+        gender: (data["gender"]==1)?"woman":"man",
+        biography: data["biography"],
+        imageUrl: "$theMovieDbImageURL${data["profile_path"]}",
+        dateOfBirth:DateTime.parse(data["birthday"]),
+        dateOfDeath:(data["deathday"]==null)?null:DateTime.parse(data["deathday"]),
+        placeOfBirth: data["place_of_birth"],
+        rating: data["popularity"]);
+    return Future.value(actor);
   }
 }

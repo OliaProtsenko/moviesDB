@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:movies/movies_cubit.dart';
-import 'package:movies/movies_state.dart';
+import 'package:movies/cubits/movies_cubit.dart';
+import 'package:movies/cubits/movies_state.dart';
 import 'package:movies/models/movie_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movies/repository.dart';
 import 'package:movies/screens/movie_details.dart';
 import '../models/genre_model.dart';
 
@@ -11,29 +12,29 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MoviesCubit, MoviesState>(builder: (context, state) {
-      if (state is LoadingState) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      } else if (state is ErrorState) {
-        return const Center(
-          child: Icon(Icons.close),
-        );
-      } else if (state is LoadedState) {
-        final movies = state.movies;
-        return ListView.builder(
-            itemCount: movies.length,
-            itemBuilder: (context, i) {
-              GenreModel key = movies.keys.elementAt(i);
-              return listMoviesOfGenre(key, context, movies[key]!);
-            });
-      } else if (state is LoadedOneMovieState) {
-        final movie = state.movie;
-        return MovieDetails(movie: movie);
-      }
-      throw Exception();
-    });
+    return BlocProvider<MoviesCubit>(
+        create: (context) => MoviesCubit(repository: MovieRepository()),
+        child: Scaffold(body:
+            BlocBuilder<MoviesCubit, MoviesState>(builder: (context, state) {
+          if (state is LoadingState) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (state is ErrorState) {
+            return const Center(
+              child: Icon(Icons.close),
+            );
+          } else if (state is LoadedState) {
+            final movies = state.movies;
+            return ListView.builder(
+                itemCount: movies.length,
+                itemBuilder: (context, i) {
+                  GenreModel key = movies.keys.elementAt(i);
+                  return listMoviesOfGenre(key, context, movies[key]!);
+                });
+          }
+          throw Exception();
+        })));
   }
 }
 
@@ -53,7 +54,11 @@ Widget listMoviesOfGenre(
                       : const Icon(Icons.downloading),
                   iconSize: 150,
                   onPressed: () {
-                    context.read<MoviesCubit>().getChosenMovie(movies[index].id);
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              MovieDetails(movie: movies[index])),
+                    );
                   });
             }),
         height: 300.0,

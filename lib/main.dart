@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movies/movies_cubit.dart';
-import 'package:movies/movies_state.dart';
+import 'package:movies/cubits/movies_cubit.dart';
+import 'package:movies/cubits/movies_state.dart';
 
 import 'package:movies/repository.dart';
 import 'package:movies/screens/home_screen.dart';
@@ -24,10 +24,8 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: BlocProvider<MoviesCubit>(
-        create: (context) => MoviesCubit(repository: MovieRepository()),
-        child: Scaffold(body: HomeScreen()),
-      ),
+      home:
+        Scaffold(body: HomeScreen()),
     );
   }
 }

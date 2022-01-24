@@ -1,9 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies/models/genre_model.dart';
-import 'package:movies/movies_state.dart';
+import 'package:movies/cubits/movies_state.dart';
 import 'package:movies/repository.dart';
 
-import 'models/movie_model.dart';
+import '../models/movie_model.dart';
 
 
 class MoviesCubit extends Cubit<MoviesState> {
@@ -25,16 +25,7 @@ class MoviesCubit extends Cubit<MoviesState> {
       emit(ErrorState());
     }
   }
-  void getChosenMovie(String movieId) async{
-    try {
-      emit(LoadingState());
-      final movie = await repository.searchMovieById(movieId: movieId);
-      emit(LoadedOneMovieState(movie));
-    }
-   catch(e){
-     emit(ErrorState());
-    }
-  }
+
 
   final MovieRepository repository;
 }
