@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movies/cubits/movies_cubit.dart';
-import 'package:movies/cubits/movies_state.dart';
-
 import 'package:movies/repository.dart';
 import 'package:movies/screens/home_screen.dart';
-
-import 'package:movies/screens/movie_details.dart';
+import 'package:movies/widgets/app_theme.dart';
+import 'package:get_it/get_it.dart';
+GetIt getIt = GetIt.instance;
 
 void main() {
+  getIt.registerLazySingleton<MovieRepository>(
+          () => HttpMovieRepository());
+
+
   runApp(const MyApp());
 }
 
@@ -24,8 +25,9 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home:
-        Scaffold(body: HomeScreen()),
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      home: const HomeScreen(),
     );
   }
 }

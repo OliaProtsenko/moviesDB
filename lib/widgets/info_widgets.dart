@@ -1,16 +1,11 @@
-
 import 'package:flutter/material.dart';
 
-Widget titleView(String title) {
+Widget titleView(String title, BuildContext context) {
   return Text(title,
-      softWrap: true,
-      style: const TextStyle(
-        fontWeight: FontWeight.bold,
-        fontSize: 25,
-      ));
+      softWrap: true, style: Theme.of(context).textTheme.headline1);
 }
 
-Widget dateView(String date) {
+Widget dateView(String date, BuildContext context) {
   return Padding(
     padding: const EdgeInsets.only(
       top: 10.0,
@@ -21,17 +16,13 @@ Widget dateView(String date) {
       Padding(
         padding: const EdgeInsets.only(left: 5.0),
         child: Text(date,
-            softWrap: true,
-            style: const TextStyle(
-                color: Colors.black54,
-                fontSize: 17,
-                fontWeight: FontWeight.w400)),
+            softWrap: true, style: Theme.of(context).textTheme.headline3),
       )
     ]),
   );
 }
 
-Widget ratingView(double rating) {
+Widget ratingView(double rating, BuildContext context) {
   return Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
     const Icon(
       Icons.star,
@@ -39,18 +30,13 @@ Widget ratingView(double rating) {
     ),
     Padding(
       padding: const EdgeInsets.only(left: 5.0),
-      child: Text(
-        rating.toString(),
-        softWrap: true,
-        style: const TextStyle(
-          fontSize: 18.0,
-        ),
-      ),
+      child: Text(rating.toString(),
+          softWrap: true, style: Theme.of(context).textTheme.headline4),
     )
   ]);
 }
 
-Widget overview(String title, String overview) {
+Widget overview(String title, String overview, BuildContext context) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: <Widget>[
@@ -58,17 +44,15 @@ Widget overview(String title, String overview) {
         padding: const EdgeInsets.only(left: 15.0),
         child: Text(
           title,
-          style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 25),
+          style: Theme.of(context).textTheme.headline1,
         ),
       ),
       Padding(
         padding: const EdgeInsets.only(
             left: 15.0, right: 15.0, top: 8.0, bottom: 10.0),
-        child: Text(overview,
-          style: const TextStyle(
-            fontSize: 18,
-            color: Colors.black54,
-          ),
+        child: Text(
+          overview,
+          style: Theme.of(context).textTheme.bodyText1,
         ),
       ),
     ],

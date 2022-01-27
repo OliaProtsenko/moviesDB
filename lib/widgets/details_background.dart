@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 Widget detailsBackground(
-    Widget backgroundImage, Widget info, String mainImageURL) {
+    Widget backgroundImage, Widget info, String mainImageURL,
+    [String? id]) {
   return Stack(
     children: <Widget>[
       Positioned(
@@ -21,9 +22,12 @@ Widget detailsBackground(
       Positioned(
         top: 130.0,
         left: 20.0,
-        child: ClipRRect(
-            borderRadius: BorderRadius.circular(8.0),
-            child: Image.network(mainImageURL, height: 200.0)),
+        child: Hero(
+          tag: "$id",
+          child: ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: Image.network(mainImageURL, height: 200.0)),
+        ),
       )
     ],
   );

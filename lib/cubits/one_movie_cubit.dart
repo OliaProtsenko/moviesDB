@@ -1,10 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies/cubits/one_movie_state.dart';
-import 'package:movies/models/genre_model.dart';
-
 import 'package:movies/repository.dart';
-
-import '../models/movie_model.dart';
 
 
 class OneMovieCubit extends Cubit<OneMovieState> {

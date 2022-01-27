@@ -1,7 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:movies/models/actor_model.dart';
-
-import '../models/genre_model.dart';
 import '../models/movie_model.dart';
 
 abstract class OneMovieState extends Equatable {}

@@ -5,6 +5,18 @@ import 'dart:convert';
 import 'models/genre_model.dart';
 import 'constants.dart';
 
+abstract class MovieRepository {
+  Future<List<GenreModel>> getGenres();
+
+  Future<List<MovieModel>> getMovies({required GenreModel genre});
+
+  Future<MovieModel> searchMovieById({required movieId});
+
+  Future<List<ActorModel>> getActorsForFilm({required movieId});
+
+  Future<ActorModel> getActorById({required actorId});
+}
+
 class NetworkHelper {
   NetworkHelper(this.url);
 
@@ -21,7 +33,7 @@ class NetworkHelper {
   }
 }
 
-class MovieRepository {
+class HttpMovieRepository implements MovieRepository {
   Future _getData({required String url}) async {
     NetworkHelper networkHelper = NetworkHelper(Uri.parse(url));
     var data = await networkHelper.getData();
@@ -83,7 +95,9 @@ class MovieRepository {
             id: item["id"].toString(),
             name: item["name"],
             gender: (item["gender"] == 1) ? "woman" : "man",
-            imageUrl: (item["profile_path"]==null)?"null":"$theMovieDbImageURL${item["profile_path"]}",
+            imageUrl: (item["profile_path"] == null)
+                ? "null"
+                : "$theMovieDbImageURL${item["profile_path"]}",
             rating: item["popularity"].toDouble()));
       }
     }
@@ -96,11 +110,13 @@ class MovieRepository {
     ActorModel actor = ActorModel(
         id: data["id"].toString(),
         name: data["name"],
-        gender: (data["gender"]==1)?"woman":"man",
+        gender: (data["gender"] == 1) ? "woman" : "man",
         biography: data["biography"],
         imageUrl: "$theMovieDbImageURL${data["profile_path"]}",
-        dateOfBirth:DateTime.parse(data["birthday"]),
-        dateOfDeath:(data["deathday"]==null)?null:DateTime.parse(data["deathday"]),
+        dateOfBirth: DateTime.parse(data["birthday"]),
+        dateOfDeath: (data["deathday"] == null)
+            ? null
+            : DateTime.parse(data["deathday"]),
         placeOfBirth: data["place_of_birth"],
         rating: data["popularity"]);
     return Future.value(actor);

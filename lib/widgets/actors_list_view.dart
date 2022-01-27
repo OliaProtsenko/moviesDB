@@ -5,6 +5,7 @@ import 'package:movies/cubits/one_movie_state.dart';
 import 'package:movies/models/actor_model.dart';
 import 'package:movies/repository.dart';
 import 'package:movies/screens/actor_screen.dart';
+import 'package:movies/main.dart';
 
 class ActorsForMovieView extends StatelessWidget {
   const ActorsForMovieView({Key? key, required this.movieId}) : super(key: key);
@@ -13,8 +14,8 @@ class ActorsForMovieView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<OneMovieCubit>(
-        create: (context) =>
-            OneMovieCubit(repository: MovieRepository(), movieId: movieId),
+        create: (context) => OneMovieCubit(
+            repository: getIt.get<MovieRepository>(), movieId: movieId),
         child: BlocBuilder<OneMovieCubit, OneMovieState>(
             builder: (context, state) {
           if (state is LoadingState) {
@@ -47,18 +48,26 @@ class ActorsForMovieView extends StatelessWidget {
       padding: const EdgeInsets.only(right: 8.0, top: 8.0),
       child: Column(
         children: <Widget>[
-          IconButton(
-              iconSize: 70.0,
-              icon: (actor.imageUrl == "null")
-                  ? const Icon(Icons.add_a_photo)
-                  : CircleAvatar(
-                      radius: 70,
-                      backgroundImage: NetworkImage(actor.imageUrl),
-                    ),
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => ActorScreen(actorId: actor.id)));
-              }),
+          Hero(
+            tag: actor.id,
+            child: Material(
+              shape: const CircleBorder(),
+              child: InkWell(
+                child: (actor.imageUrl == "null")
+                    ? const Icon(Icons.add_a_photo)
+                    : CircleAvatar(
+                        radius: 40,
+                        backgroundImage: NetworkImage(actor.imageUrl),
+                      ),
+                onTap: () {
+                  Navigator.of(context).push(PageRouteBuilder(
+                      transitionDuration: const Duration(seconds: 2),
+                      pageBuilder: (_, __, ___) =>
+                          ActorScreen(actorId: actor.id)));
+                },
+              ),
+            ),
+          ),
           Text(actor.name)
         ],
       ),

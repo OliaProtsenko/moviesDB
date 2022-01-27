@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movies/cubits/one_movie_cubit.dart';
-import 'package:movies/cubits/one_movie_state.dart';
-import 'package:movies/models/actor_model.dart';
 import 'package:movies/models/movie_model.dart';
-import 'package:movies/repository.dart';
 import 'package:movies/widgets/actors_list_view.dart';
 import 'package:movies/widgets/details_background.dart';
 import 'package:movies/widgets/structure_info_widget.dart';
@@ -20,13 +15,14 @@ class MovieDetails extends StatelessWidget {
         body: detailsBackground(
             Image.network(movie.backdropImageUrl!, fit: BoxFit.fill),
             infoWidget(
+              context: context,
               columnChildren: [
-                titleView(movie.title),
-                dateView(movie.date),
-                ratingView(movie.rating),
+                titleView(movie.title, context),
+                dateView(movie.date, context),
+                ratingView(movie.rating, context),
               ],
               listChildren: [
-                overview("Overview", movie.overview),
+                overview("Overview", movie.overview, context),
                 ActorsForMovieView(movieId: movie.id),
               ],
             ),

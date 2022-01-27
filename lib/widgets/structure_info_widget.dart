@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 
 Widget infoWidget(
     {required List<Widget> columnChildren,
-    required List<Widget> listChildren}) {
+    required List<Widget> listChildren,
+    required BuildContext context}) {
   return Container(
     decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.background,
         borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
-        border: Border.all(width: 1.0, color: Colors.white)),
+        border: Border.all(
+            width: 1.0, color: Theme.of(context).colorScheme.background)),
     child: Column(
       children: [
         Padding(
