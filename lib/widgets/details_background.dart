@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:movies/constants_for_widgets.dart';
 
 Widget detailsBackground(
-    Widget backgroundImage, Widget info, String mainImageURL,
-    [String? id]) {
+    Widget backgroundImage, Widget info, String? mainImageURL,
+    [int? id]) {
   return Stack(
     children: <Widget>[
       Positioned(
-        top: 0.0,
-        left: 0.0,
-        height: 200.0,
-        right: 0.0,
+        top: startPosition,
+        left: startPosition,
+        height: imageHeight,
+        right: startPosition,
         child: backgroundImage,
       ),
       Positioned(
         top: 175.0,
-        left: 0.0,
-        bottom: 0.0,
-        right: 0.0,
+        left: startPosition,
+        bottom: startPosition,
+        right: startPosition,
         child: info,
       ),
       Positioned(
@@ -25,8 +26,10 @@ Widget detailsBackground(
         child: Hero(
           tag: "$id",
           child: ClipRRect(
-              borderRadius: BorderRadius.circular(8.0),
-              child: Image.network(mainImageURL, height: 200.0)),
+              borderRadius: BorderRadius.circular(borderRadiusForImages),
+              child: (mainImageURL != null)
+                  ? Image.network(mainImageURL, height: imageHeight)
+                  : const Icon(Icons.photo)),
         ),
       )
     ],

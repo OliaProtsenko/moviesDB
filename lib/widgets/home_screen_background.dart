@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:movies/constants_for_widgets.dart';
+import 'package:movies/widgets/searching_widgets.dart';
 
 Widget detailsBackground(
     Widget backgroundImage, Widget info, String mainImageURL) {
@@ -29,25 +31,34 @@ class HomeBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: <Widget>[
-      Positioned(
-          child: Container(
-        color: Theme.of(context).colorScheme.background,
-      )),
-      Positioned(
-        child: ClipPath(
-          child: Container(
-            color: Colors.cyan,
+    return Scaffold(
+      body: Stack(children: <Widget>[
+        Positioned(
+            child: Container(
+          color: Theme.of(context).colorScheme.background,
+        )),
+        Positioned(
+          child: ClipPath(
             child: backgroundImage,
+            clipper: _MyClipper(),
           ),
-          clipper: _MyClipper(),
         ),
-      ),
-      Positioned(
-        child: child,
-      )
-    ]);
-
+        Positioned(
+          top: 50.0,
+          bottom: startPosition,
+          left: startPosition,
+          right: startPosition,
+          child: child,
+        ),
+        const Positioned(
+          top: smallLineSpacing,
+          //  bottom: startPosition,
+          left: startPosition,
+          right: startPosition,
+          child: SearchingWidget(),
+        )
+      ]),
+    );
   }
 }
 
@@ -55,11 +66,11 @@ class _MyClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     final path = Path();
-    path.lineTo(0, 0);
-    path.lineTo(0, size.height * 0.35);
+    path.lineTo(startPosition, startPosition);
+    path.lineTo(startPosition, size.height * 0.35);
     path.lineTo(size.width, size.height * 0.65);
-    path.lineTo(size.width, 0);
-    path.lineTo(0, 0);
+    path.lineTo(size.width, startPosition);
+    path.lineTo(startPosition, startPosition);
 
     path.close();
     return path;

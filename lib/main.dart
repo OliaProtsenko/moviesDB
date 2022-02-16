@@ -1,14 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:movies/repository.dart';
+import 'package:get_it/get_it.dart';
+import 'package:movies/database.dart';
+import 'package:movies/repository/database_repository.dart';
+import 'package:movies/repository/database_repository_implementation.dart';
+import 'package:movies/repository/http_repository.dart';
+import 'package:movies/repository/repository.dart';
 import 'package:movies/screens/home_screen.dart';
 import 'package:movies/widgets/app_theme.dart';
-import 'package:get_it/get_it.dart';
+
 GetIt getIt = GetIt.instance;
 
-void main() {
-  getIt.registerLazySingleton<MovieRepository>(
-          () => HttpMovieRepository());
-
+Future<void> main() async {
+  getIt.registerLazySingleton<MovieRepository>(() => HttpMovieRepository());
+  WidgetsFlutterBinding.ensureInitialized();
+  final database =
+      await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+  getIt.registerLazySingleton<DatabaseRepository>(
+      () => DatabaseRepositoryImplementation(
+            database: database,
+            httpRepository: getIt.get<MovieRepository>(),
+          ));
+  // databaseRepository: DatabaseRepository(database: database)));
 
   runApp(const MyApp());
 }

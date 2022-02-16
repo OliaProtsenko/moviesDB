@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:movies/constants_for_widgets.dart';
 import 'package:movies/cubits/actor_cubit.dart';
 import 'package:movies/cubits/actor_state.dart';
-import 'package:movies/repository.dart';
-import 'package:movies/widgets/details_background.dart';
-import 'package:movies/widgets/structure_info_widget.dart';
-import 'package:movies/widgets/info_widgets.dart';
-import 'package:intl/intl.dart';
 import "package:movies/main.dart";
+import 'package:movies/repository/database_repository.dart';
+import 'package:movies/widgets/details_background.dart';
+import 'package:movies/widgets/info_widgets.dart';
+import 'package:movies/widgets/structure_info_widget.dart';
 
 class ActorScreen extends StatelessWidget {
   const ActorScreen({Key? key, required this.actorId}) : super(key: key);
-  final String actorId;
+  final int actorId;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<ActorCubit>(
         create: (context) => ActorCubit(
-            repository: getIt.get<MovieRepository>(), actorId: actorId),
+            databaseRepository: getIt.get<DatabaseRepository>(),
+            actorId: actorId),
         child: Scaffold(
           body: BlocBuilder<ActorCubit, ActorState>(builder: (context, state) {
             if (state is LoadingState) {
@@ -32,17 +34,20 @@ class ActorScreen extends StatelessWidget {
               final actor = state.actor;
               return detailsBackground(
                   Image.asset(
-                    'assets/dark-blue-blurred-background.jpg',
+                    backgroundImage,
                     fit: BoxFit.fill,
                   ),
                   infoWidget(context: context, columnChildren: [
                     titleView(actor.name, context),
-                    dateView(
-                        DateFormat.yMMMMd('en_US').format(actor.dateOfBirth!),
-                        context),
+                    if (actor.dateOfBirth != null)
+                      dateView(
+                          DateFormat.yMMMMd('en_US')
+                              .format(DateTime.parse(actor.dateOfBirth!)),
+                          context),
                     if (actor.dateOfDeath != null)
                       dateView(
-                          DateFormat.yMMMMd('en_US').format(actor.dateOfDeath!),
+                          DateFormat.yMMMMd('en_US')
+                              .format(DateTime.parse(actor.dateOfDeath!)),
                           context),
                     ratingView(actor.rating, context),
                   ], listChildren: [

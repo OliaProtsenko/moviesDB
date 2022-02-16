@@ -2,20 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies/cubits/one_movie_cubit.dart';
 import 'package:movies/cubits/one_movie_state.dart';
-import 'package:movies/models/actor_model.dart';
-import 'package:movies/repository.dart';
-import 'package:movies/screens/actor_screen.dart';
 import 'package:movies/main.dart';
+import 'package:movies/models/actor_model.dart';
+import 'package:movies/repository/database_repository.dart';
+import 'package:movies/screens/actor_screen.dart';
 
 class ActorsForMovieView extends StatelessWidget {
   const ActorsForMovieView({Key? key, required this.movieId}) : super(key: key);
-  final String movieId;
+  final int movieId;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<OneMovieCubit>(
         create: (context) => OneMovieCubit(
-            repository: getIt.get<MovieRepository>(), movieId: movieId),
+            databaseRepository: getIt.get<DatabaseRepository>(),
+            movieId: movieId),
         child: BlocBuilder<OneMovieCubit, OneMovieState>(
             builder: (context, state) {
           if (state is LoadingState) {
@@ -53,11 +54,11 @@ class ActorsForMovieView extends StatelessWidget {
             child: Material(
               shape: const CircleBorder(),
               child: InkWell(
-                child: (actor.imageUrl == "null")
+                child: (actor.imageUrl == null)
                     ? const Icon(Icons.add_a_photo)
                     : CircleAvatar(
                         radius: 40,
-                        backgroundImage: NetworkImage(actor.imageUrl),
+                        backgroundImage: NetworkImage(actor.imageUrl!),
                       ),
                 onTap: () {
                   Navigator.of(context).push(PageRouteBuilder(
